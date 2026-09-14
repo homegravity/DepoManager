@@ -31,17 +31,42 @@ const navigate = useNavigate();
 
         <nav className="mt-10 flex flex-col gap-5">
 
-          <button className="text-left">
+          <button
+            onClick={() => navigate("/")}
+            className="text-left"
+          >
             📝 기록
           </button>
 
-          <button className="text-left">
-            📚 소자
-          </button>
+         <button
+          onClick={() => navigate("/create")}
+          className="
+            text-left
+            bg-blue-600
+            text-white
+            rounded-lg
+            px-4
+            py-3
+            font-medium
+          "
+        >
+          ＋ 새 실험
+        </button>
 
-          <button className="text-left">
-            ⚙ 설정
-          </button>
+
+         <button
+          onClick={() => navigate("/devices")}
+          className="text-left"
+        >
+          📚 소자
+        </button>
+
+          <button
+          onClick={() => navigate("/settings")}
+          className="text-left"
+        >
+          ⚙ 설정
+        </button>
 
         </nav>
 
