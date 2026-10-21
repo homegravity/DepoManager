@@ -1,14 +1,229 @@
+import { useState } from "react";
+
+
 function LayerForm({
   layer,
   index,
   totalLayers,
   updateLayer,
   removeLayer,
-  copyLayer,
+  
   moveLayerUp,
   moveLayerDown,
 }) {
+
+  
+
+  const [isSaved, setIsSaved] = useState(false);
+  const [recipes, setRecipes] = useState([]);
+const [showRecipes, setShowRecipes] = useState(false);
+
+
+  const saveCondition = () => {
+
+    const savedRecipes =
+      JSON.parse(
+        localStorage.getItem("depositionRecipes")
+      ) || [];
+
+
+    const material =
+      layer.material?.trim() || "Material";
+
+
+    const powerPart =
+      layer.power
+        ? `${layer.powerType}${layer.power}W`
+        : layer.powerType || "";
+
+
+    const arPart =
+      layer.ar
+        ? `Ar${layer.ar}`
+        : "";
+
+
+    const depoPart =
+      layer.depoTime
+        ? `${layer.depoTime}s`
+        : "";
+
+
+    const autoName =
+      [
+        material,
+        powerPart,
+        arPart,
+        depoPart,
+      ]
+        .filter(Boolean)
+        .join("_");
+
+
+    const newRecipe = {
+
+      id: Date.now() + Math.random(),
+
+      name: autoName,
+
+      material: layer.material,
+
+      basePressureValue:
+        layer.basePressureValue,
+
+      basePressureExponent:
+        layer.basePressureExponent,
+
+      workingPressure:
+        layer.workingPressure,
+
+      ar: layer.ar,
+
+      useO2: layer.useO2,
+
+      o2: layer.o2,
+
+      powerType: layer.powerType,
+
+      power: layer.power,
+
+      preTime: layer.preTime,
+
+      depoTime: layer.depoTime,
+
+    };
+
+    
+
+
+
+    localStorage.setItem(
+      "depositionRecipes",
+      JSON.stringify([
+        ...savedRecipes,
+        newRecipe,
+      ])
+    );
+
+
+    setIsSaved(true);
+
+
+    setTimeout(() => {
+      setIsSaved(false);
+    }, 1500);
+
+  };
+
+
+const openRecipes = () => {
+
+  const savedRecipes =
+    JSON.parse(
+      localStorage.getItem("depositionRecipes")
+    ) || [];
+
+  setRecipes(savedRecipes);
+
+  setShowRecipes((prev) => !prev);
+
+};
+
+
+
+const loadRecipe = (recipeId) => {
+
+  const recipe =
+    recipes.find(
+      (item) =>
+        item.id === Number(recipeId)
+    );
+
+
+  if (!recipe) {
+    return;
+  }
+
+
+  updateLayer(
+    layer.id,
+    "material",
+    recipe.material || ""
+  );
+
+  updateLayer(
+    layer.id,
+    "basePressureValue",
+    recipe.basePressureValue || ""
+  );
+
+  updateLayer(
+    layer.id,
+    "basePressureExponent",
+    recipe.basePressureExponent || ""
+  );
+
+  updateLayer(
+    layer.id,
+    "workingPressure",
+    recipe.workingPressure || ""
+  );
+
+  updateLayer(
+    layer.id,
+    "ar",
+    recipe.ar || ""
+  );
+
+  updateLayer(
+    layer.id,
+    "useO2",
+    recipe.useO2 || false
+  );
+
+  updateLayer(
+    layer.id,
+    "o2",
+    recipe.o2 || ""
+  );
+
+  updateLayer(
+    layer.id,
+    "powerType",
+    recipe.powerType || "DC"
+  );
+
+  updateLayer(
+    layer.id,
+    "power",
+    recipe.power || ""
+  );
+
+  updateLayer(
+    layer.id,
+    "preTime",
+    recipe.preTime || ""
+  );
+
+  updateLayer(
+    layer.id,
+    "depoTime",
+    recipe.depoTime || ""
+  );
+
+
+  setShowRecipes(false);
+
+};
+
+
   return (
+
+  
+
+
+
+  
     <div className="border rounded-xl p-4 md:p-5 bg-gray-50">
 
       {/* 카드 상단 */}
@@ -47,12 +262,21 @@ function LayerForm({
     </button>
 
     <button
-      type="button"
-      onClick={() => copyLayer(layer.id)}
-      className="text-sm text-blue-600"
-    >
-      복사
-    </button>
+        type="button"
+        onClick={saveCondition}
+        disabled={isSaved}
+        className={
+          isSaved
+            ? "text-sm text-green-600"
+            : "text-sm text-blue-600"
+        }
+      >
+        {isSaved
+          ? "✓ 저장됨"
+          : "조건 저장"}
+      </button>
+
+
 
     <button
       type="button"
@@ -65,6 +289,94 @@ function LayerForm({
   </div>
 
 </div>
+
+
+
+
+
+          <div className="mb-5">
+
+  <button
+    type="button"
+    onClick={openRecipes}
+    className="
+      w-full
+      bg-white
+      border
+      border-gray-300
+      rounded-lg
+      px-4
+      py-2.5
+      text-sm
+      font-medium
+      text-gray-700
+      hover:bg-gray-50
+    "
+  >
+    기존 조건 불러오기
+  </button>
+
+
+  {showRecipes && (
+
+    <div className="mt-2">
+
+      {recipes.length === 0 ? (
+
+        <p className="
+          text-sm
+          text-gray-500
+          bg-white
+          border
+          rounded-lg
+          p-3
+        ">
+          저장된 조건이 없습니다.
+        </p>
+
+      ) : (
+
+        <select
+          defaultValue=""
+          onChange={(e) =>
+            loadRecipe(e.target.value)
+          }
+          className="
+            w-full
+            bg-white
+            border
+            rounded-lg
+            p-3
+            text-sm
+          "
+        >
+
+          <option value="" disabled>
+            저장된 조건 선택
+          </option>
+
+
+          {recipes.map((recipe) => (
+
+            <option
+              key={recipe.id}
+              value={recipe.id}
+            >
+              {recipe.name}
+            </option>
+
+          ))}
+
+        </select>
+
+      )}
+
+    </div>
+
+  )}
+
+</div>
+
 
 
       <div className="space-y-6">

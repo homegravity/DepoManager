@@ -6,6 +6,7 @@ function DeviceList() {
 
     const navigate = useNavigate();
   const [devices, setDevices] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
 
 
   useEffect(() => {
@@ -63,6 +64,23 @@ grouped[deviceKey].count += 1;
   }, []);
 
 
+    const filteredDevices =
+    devices.filter((device) => {
+
+      const keyword =
+        searchTerm.trim().toLowerCase();
+
+      if (!keyword) {
+        return true;
+      }
+
+      return device.name
+        .toLowerCase()
+        .includes(keyword);
+
+    });
+
+
 
   return (
 
@@ -78,9 +96,66 @@ grouped[deviceKey].count += 1;
 
 
 
+
+      <div className="relative mt-5">
+
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) =>
+            setSearchTerm(e.target.value)
+          }
+          placeholder="소자명 검색"
+          className="
+            w-full
+            bg-white
+            border
+            rounded-xl
+            pl-4
+            pr-11
+            py-3
+            outline-none
+            focus:ring-2
+            focus:ring-blue-500
+          "
+        />
+
+
+        {searchTerm && (
+
+          <button
+            type="button"
+            onClick={() =>
+              setSearchTerm("")
+            }
+            aria-label="검색어 지우기"
+            className="
+              absolute
+              right-3
+              top-1/2
+              -translate-y-1/2
+              w-7
+              h-7
+              flex
+              items-center
+              justify-center
+              rounded-full
+              text-gray-400
+              hover:bg-gray-100
+              hover:text-gray-700
+            "
+          >
+            ×
+          </button>
+
+        )}
+
+      </div>
+
+
       <div className="mt-6 space-y-3">
 
-        {devices.length === 0 ? (
+        {filteredDevices.length === 0 ? (
 
           <div className="
             bg-white
@@ -90,12 +165,18 @@ grouped[deviceKey].count += 1;
             text-sm
             text-gray-500
           ">
-            저장된 소자가 없습니다.
+
+            {
+              searchTerm.trim()
+                ? "검색 결과가 없습니다."
+                : "저장된 소자가 없습니다."
+            }
+
           </div>
 
         ) : (
 
-          devices.map((device) => (
+          filteredDevices.map((device) => (
 
             <div
             key={device.key}

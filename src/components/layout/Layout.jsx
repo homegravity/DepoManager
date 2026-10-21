@@ -61,6 +61,16 @@ const navigate = useNavigate();
           📚 소자
         </button>
 
+
+          <button
+        onClick={() => navigate("/recipes")}
+        className="text-left"
+      >
+        🧪 저장 조건
+      </button>
+
+
+
           <button
           onClick={() => navigate("/settings")}
           className="text-left"
@@ -169,43 +179,70 @@ const navigate = useNavigate();
                 items-center
                 ">
           
-          <button className="
-                flex
-                flex-col
-                items-center
-                justify-center
-                ">
-                📝
-                <span>
-                    기록
-                </span>
-                </button>
+          <button
+            onClick={() => navigate("/")}
+            className="
+              flex
+              flex-col
+              items-center
+              justify-center
+            "
+          >
+            📝
+            <span>
+              기록
+            </span>
+          </button>
 
 
-          <button className="
-                flex
-                flex-col
-                items-center
-                justify-center
-                ">
-                📚
-                <span>
-                    소자
-                </span>
-                </button>
+         <button
+            onClick={() => navigate("/devices")}
+            className="
+              flex
+              flex-col
+              items-center
+              justify-center
+            "
+          >
+            📚
+            <span>
+              소자
+            </span>
+          </button>
 
 
-                <button className="
-                flex
-                flex-col
-                items-center
-                justify-center
-                ">
+        <button
+          onClick={() => navigate("/recipes")}
+          className="
+            flex
+            flex-col
+            items-center
+            justify-center
+          "
+        >
+          🧪
+          <span>
+            저장 조건
+          </span>
+        </button>
+
+
+
+              <button
+                type="button"
+                onClick={() => navigate("/settings")}
+                className="
+                  flex
+                  flex-col
+                  items-center
+                  justify-center
+                "
+              >
                 ⚙
                 <span>
-                    설정
+                  설정
                 </span>
-                </button>
+              </button>
 
 
           
@@ -219,4 +256,4 @@ const navigate = useNavigate();
   );
 }
 
-export default Layout;<main className="p-4 md:ml-64"></main>
+export default Layout;

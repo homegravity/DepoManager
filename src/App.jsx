@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+
+import RecipeLibrary from "./pages/RecipeLibrary";
 import Layout from "./components/layout/Layout";
 
 import Settings from "./pages/Settings";
@@ -32,6 +34,13 @@ function App() {
             path="/devices/:deviceName"
             element={<DeviceDetail />}
           />
+
+          <Route
+            path="/recipes"
+            element={<RecipeLibrary />}
+          />
+
+
 
           <Route 
             path="/create" 

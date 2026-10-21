@@ -7,6 +7,8 @@ function Home() {
 
   const [experiments, setExperiments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
 
   const deleteExperiment = (id) => {
@@ -60,11 +62,6 @@ function Home() {
       searchTerm.trim().toLowerCase();
 
 
-    if (!keyword) {
-      return true;
-    }
-
-
     const device =
       experiment.device?.toLowerCase() || "";
 
@@ -79,14 +76,33 @@ function Home() {
         .join(" ") || "";
 
 
-    return (
+    // 글자 검색
+    const matchesSearch =
+      !keyword ||
       device.includes(keyword) ||
       bottom.includes(keyword) ||
-      layerMaterials.includes(keyword)
+      layerMaterials.includes(keyword);
+
+
+    // 시작 날짜
+    const matchesStartDate =
+      !startDate ||
+      experiment.date >= startDate;
+
+
+    // 종료 날짜
+    const matchesEndDate =
+      !endDate ||
+      experiment.date <= endDate;
+
+
+    return (
+      matchesSearch &&
+      matchesStartDate &&
+      matchesEndDate
     );
 
   });
-
 
 
   return (
@@ -126,17 +142,113 @@ function Home() {
         "
       />
 
+      <div
+  className="
+    grid
+    grid-cols-1
+    sm:grid-cols-2
+    gap-3
+    mb-5
+  "
+>
+
+  <div>
+
+    <label className="text-xs text-gray-500">
+      시작 날짜
+    </label>
+
+    <input
+      type="date"
+      value={startDate}
+      onChange={(e) =>
+        setStartDate(e.target.value)
+      }
+      className="
+        w-full
+        mt-1
+        bg-white
+        border
+        rounded-xl
+        px-4
+        py-3
+        outline-none
+        focus:ring-2
+        focus:ring-blue-500
+      "
+    />
+
+  </div>
+
+
+  <div>
+
+    <label className="text-xs text-gray-500">
+      종료 날짜
+    </label>
+
+    <input
+      type="date"
+      value={endDate}
+      onChange={(e) =>
+        setEndDate(e.target.value)
+      }
+      className="
+        w-full
+        mt-1
+        bg-white
+        border
+        rounded-xl
+        px-4
+        py-3
+        outline-none
+        focus:ring-2
+        focus:ring-blue-500
+      "
+    />
+
+  </div>
+
+    </div>
+
+    {(startDate || endDate) && (
+
+      <div className="flex justify-end mb-5">
+
+        <button
+          type="button"
+          onClick={() => {
+            setStartDate("");
+            setEndDate("");
+          }}
+          className="
+            text-sm
+            text-gray-500
+            hover:text-gray-800
+          "
+        >
+          날짜 초기화
+        </button>
+
+      </div>
+
+    )}
 
 
       {
-        filteredExperiments.length === 0 ? (
+          filteredExperiments.length === 0 ? (
 
-          <p className="text-gray-500">
-            아직 저장된 실험 기록이 없습니다.
-          </p>
+            <p className="text-gray-500">
 
+              {
+                  searchTerm.trim() || startDate || endDate
+                  ? "검색 결과가 없습니다."
+                  : "아직 저장된 실험 기록이 없습니다."
+              }
 
-        ) : (
+            </p>
+
+          ) : (
 
 
           <div>
